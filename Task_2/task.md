@@ -3,6 +3,15 @@
 **Выполнил:** Товпеко Глеб Вадимович, группа K0109-23
 
 # Фото рабочего задания:
+<img width="720" height="880" alt="изображение" src="https://github.com/user-attachments/assets/b1a2463a-f291-4d37-af90-b64b807eeda5" />
+
+<img width="788" height="574" alt="изображение" src="https://github.com/user-attachments/assets/7739a4ce-2ab9-4cf3-9396-5c0c12d26df1" />
+
+<img width="604" height="513" alt="изображение" src="https://github.com/user-attachments/assets/d85e497d-46e5-4e6d-84ae-aebfa4a7140b" />
+
+<img width="977" height="130" alt="изображение" src="https://github.com/user-attachments/assets/19fed545-5602-4977-beab-90189086170f" />
+
+<img width="788" height="297" alt="изображение" src="https://github.com/user-attachments/assets/a2e2cbe1-e5c8-46c4-bcf2-cc176bb9c2d7" />
 
 ---
 
