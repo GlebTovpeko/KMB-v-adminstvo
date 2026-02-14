@@ -1,0 +1,26 @@
+---
+- name: task2 - custom module
+  hosts: my_nginx
+  become: yes
+  tasks:
+    - name: Install nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+
+    - name: Set port
+      nginx_port:
+        port: 8089
+        config_path: /etc/nginx/nginx.conf
+      register: result
+      notify: restart nginx
+
+    - name: Show result
+      debug:
+        var: result
+
+  handlers:
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
