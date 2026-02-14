@@ -2,7 +2,7 @@
 
 **Выполнил:** Товпеко Глеб Вадимович, группа K0109-23
 
-# Фото рабочего задания:
+# Фото рабочего задания (после них описания задания, посмотрите пожалуйста :(( ):
 <img width="720" height="880" alt="изображение" src="https://github.com/user-attachments/assets/b1a2463a-f291-4d37-af90-b64b807eeda5" />
 
 <img width="788" height="574" alt="изображение" src="https://github.com/user-attachments/assets/7739a4ce-2ab9-4cf3-9396-5c0c12d26df1" />
