@@ -79,7 +79,7 @@
     host    replication     replicator    192.168.122.0/24    scram-sha-256
     ```
 
-![alt text](image.png)
+![alt text](photos/image.png)
 *Изменения в конфигурационных файлах Master-сервера.*
 
 ---
