@@ -1,0 +1,110 @@
+=== ОТЧЕТ ПО TASK 1 ===
+Дата: 2026-02-19T05:55:28Z
+Хост: server1
+
+--- 1. Пользователи ---
+                                     Список ролей
+  Имя роли  |                                Атрибуты                                 
+------------+-------------------------------------------------------------------------
+ pgbench    | 
+ postgres   | Суперпользователь, Создаёт роли, Создаёт БД, Репликация, Пропускать RLS
+ replicator | Репликация
+
+--- 2. Базы данных ---
+                                                     Список баз данных
+    Имя    | Владелец | Кодировка | Провайдер локали | LC_COLLATE | LC_CTYPE | Локаль | Правила ICU |     Права доступа     
+-----------+----------+-----------+------------------+------------+----------+--------+-------------+-----------------------
+ bench     | postgres | UTF8      | libc             | C          | C        |        |             | =Tc/postgres         +
+           |          |           |                  |            |          |        |             | postgres=CTc/postgres+
+           |          |           |                  |            |          |        |             | pgbench=CTc/postgres
+ postgres  | postgres | UTF8      | libc             | C          | C        |        |             | 
+ template0 | postgres | UTF8      | libc             | C          | C        |        |             | =c/postgres          +
+           |          |           |                  |            |          |        |             | postgres=CTc/postgres
+ template1 | postgres | UTF8      | libc             | C          | C        |        |             | =c/postgres          +
+           |          |           |                  |            |          |        |             | postgres=CTc/postgres
+(4 строки)
+
+--- 3. Расширения ---
+      extname       | extversion 
+--------------------+------------
+ pg_stat_statements | 1.10
+(1 строка)
+
+--- 4. Настройки логирования ---
+ log_statement 
+---------------
+ all
+(1 строка)
+
+ log_duration 
+--------------
+ on
+(1 строка)
+
+--- 5. Результаты pgbench ---
+pgbench (16.12 (Debian 16.12-1.pgdg13+1))
+transaction type: <builtin: TPC-B (sort of)>
+scaling factor: 10
+query mode: simple
+number of clients: 2
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 50
+number of transactions actually processed: 100/100
+number of failed transactions: 0 (0.000%)
+latency average = 1.651 ms
+initial connection time = 4.683 ms
+tps = 1211.343016 (without initial connection time)
+
+--- 6. Топ запросов (IO) ---
+                         query_short                          | calls | write_ms 
+--------------------------------------------------------------+-------+----------
+ CREATE VIEW pg_stat_statements_info AS                      +|     1 |     0.00
+   SELECT * FROM pg_st                                        |       | 
+ SELECT abalance FROM pgbench_accounts WHERE aid = $1         |   400 |     0.00
+ SELECT r.rolname, r.rolsuper, r.rolinherit,                 +|     2 |     0.00
+   r.rolcreaterol                                             |       | 
+ GRANT ALL ON SCHEMA public TO pgbench                        |     4 |     0.00
+ truncate table pgbench_accounts, pgbench_branches, pgbench_h |     5 |     0.00
+(5 строк)
+
+--- 7. Топ запросов (Время) ---
+                         query_short                          | calls | total_ms 
+--------------------------------------------------------------+-------+----------
+ copy pgbench_accounts from stdin with (freeze on)            |     5 |  5303.32
+ alter table pgbench_accounts add primary key (aid)           |     5 |  1550.52
+ vacuum analyze pgbench_accounts                              |     5 |   591.27
+ UPDATE pgbench_branches SET bbalance = bbalance + $1 WHERE b |   400 |    82.97
+ UPDATE pgbench_branches SET bbalance = bbalance + $1 WHERE b |   400 |    72.27
+(5 строк)
+
+--- 8. Логи ---
+2026-02-19 08:55:49 MSK [19320]: [692-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.054 ms
+2026-02-19 08:55:49 MSK [19320]: [693-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  statement: UPDATE pgbench_tellers SET tbalance = tbalance + 3709 WHERE tid = 95;
+2026-02-19 08:55:49 MSK [19320]: [694-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.068 ms
+2026-02-19 08:55:49 MSK [19320]: [695-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  statement: UPDATE pgbench_branches SET bbalance = bbalance + 3709 WHERE bid = 5;
+2026-02-19 08:55:49 MSK [19320]: [696-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.077 ms
+2026-02-19 08:55:49 MSK [19320]: [697-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  statement: INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (95, 5, 19013, 3709, CURRENT_TIMESTAMP);
+2026-02-19 08:55:49 MSK [19320]: [698-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.045 ms
+2026-02-19 08:55:49 MSK [19320]: [699-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  statement: END;
+2026-02-19 08:55:49 MSK [19319]: [700-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.637 ms
+2026-02-19 08:55:49 MSK [19320]: [700-1] user=postgres,db=bench,app=pgbench,client=[local] LOG:  duration: 0.972 ms
+
+--- 9. Пользователь репликации ---
+      Список ролей
+  Имя роли  |  Атрибуты  
+------------+------------
+ replicator | Репликация
+
+--- 10. Правила доступа ---
+# DATABASE can be "all", "sameuser", "samerole", "replication", a
+# "replication".  Access to replication must be enabled in a separate
+# "all", "sameuser", "samerole" or "replication" makes the name lose
+# maintenance (custom daily cronjobs, replication, and similar tasks).
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
+# Allow replication from local network
+host    replication     replicator    192.168.122.0/24       scram-sha-256
