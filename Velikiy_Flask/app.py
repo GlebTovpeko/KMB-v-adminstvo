@@ -48,7 +48,7 @@ def get_users():
     cur.close()
     conn.close()
     
-    # FIX: Сериализуем данные, преобразуя даты в строки
+    # Сериализуем данные, преобразуя даты в строки
     json_data = json.dumps(data, default=serialize_data)
     
     # Сохранение в кэш
@@ -74,7 +74,7 @@ def get_user(user_id):
     if not data:
         return jsonify({"error": "Not found"}), 404
         
-    # FIX: Сериализуем данные
+    # Сериализуем данные
     json_data = json.dumps(data, default=serialize_data)
     r.setex(cache_key, 60, json_data)
     return jsonify(data), 200
