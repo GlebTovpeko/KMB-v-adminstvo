@@ -1,0 +1,54 @@
+---
+- name: Setup K3s and ArgoCD
+  hosts: k3s_master
+  become: true
+  
+  tasks:
+    - name: Install K3s
+      shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Wait for K3s
+      shell: k3s kubectl get nodes
+      register: result
+      retries: 5
+      delay: 10
+      until: result.rc == 0
+    
+    - name: Copy kubeconfig to host
+      shell: cat /etc/rancher/k3s/k3s.yaml
+      register: kubeconfig
+      delegate_to: localhost
+      become: false
+    
+    - name: Create .kube on host
+      file:
+        path: ~/.kube
+        state: directory
+      delegate_to: localhost
+      become: false
+    
+    - name: Save kubeconfig with correct IP
+      copy:
+        content: "{{ kubeconfig.stdout | replace('127.0.0.1', '192.168.122.75') }}"
+        dest: ~/.kube/config
+      delegate_to: localhost
+      become: false
+    
+    - name: Install Helm
+      shell: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      args:
+        creates: /usr/local/bin/helm
+    
+    - name: Install ArgoCD
+      shell: |
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      args:
+        creates: /etc/rancher/k3s/argocd-installed
+    
+    - name: Mark ArgoCD installed
+      file:
+        path: /etc/rancher/k3s/argocd-installed
+        state: touch

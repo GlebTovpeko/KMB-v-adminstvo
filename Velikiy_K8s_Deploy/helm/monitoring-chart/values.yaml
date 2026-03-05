@@ -1,0 +1,14 @@
+prometheus:
+  enabled: true
+  server:
+    persistentVolume:
+      enabled: false
+
+grafana:
+  enabled: true
+  adminPassword: admin123
+  persistence:
+    enabled: false
+  service:
+    type: NodePort
+    nodePort: 30030

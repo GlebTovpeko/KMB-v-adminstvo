@@ -1,0 +1,8 @@
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: postgres
+    database: crud_db
+  primary:
+    persistence:
+      enabled: false
