@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/Velikiy_K8s_Deploy.git
+    repoURL: https://github.com/GlebTovpeko/Velikiy_K8s_Deploy.git
     targetRevision: HEAD
     path: helm/app-chart
   destination:
